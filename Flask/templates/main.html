@@ -1,0 +1,44 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BWS Scaling</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-md">
+        <div class="row justify-content-md-center">
+            <div class="col col-md-auto mt-5">
+                <h3>
+                    <p class='fw-bold'>Depressed ?</p>
+                </h3>
+            </div>
+        </div>
+    </div>
+    <div class="container-md w-50 text-center">
+        <p class="fs-6 fw-bold mt-5">Select BWS Set to annoatate</p>
+        <form action="/" method="post">
+            <select class="form-select mt-4 text-center" name="form_test" size="8" multiple aria-label="multiple select example">
+                <option value="1">BWS Set 1</option>
+                <option value="2">BWS Set 2</option>
+                <option value="3">BWS Set 3</option>
+                <option value="4">BWS Set 4</option>
+                <option value="5">BWS Set 5</option>
+                <option value="6">BWS Set 6</option>
+                <option value="7">BWS Set 7</option>
+                <option value="8">BWS Set 8</option>
+            </select>
+            <button type="submit" class="btn btn-outline-dark btn-sm mt-3" >Load BWS Set</button>
+        </form>
+    </div> 
+    <div class="container-md mt-5 column-gap-2">
+        <form action="/result">
+            <button type="submit" class="btn btn-outline-dark m-1" style="float:right" disabled>Result</button>
+        </form>
+        <form action="/index/{{set_idx}}/1">
+            <button type="submit" class="btn btn-outline-dark m-1" style="float:right">Start</button>
+        </form>
+    </div>     
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>   
+    </body>
+</html>
