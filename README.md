@@ -1,2 +1,2 @@
 # BWS-Tagging
-Simple tool created to make BWS tagging easier (python, flask, mysql)
+Simple tool created to make BWS(Best-Worst Scaling) tagging easier (python, flask, mysql)
