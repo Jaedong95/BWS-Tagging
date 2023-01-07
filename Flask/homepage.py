@@ -16,53 +16,89 @@ def index(question_no):
     print(f'{set_idx}번 BWS Set 작업 중..')
     select_set = bws_set_df[bws_set_df.Set_no==set_idx]
     select_set.reset_index(inplace=True, drop=True)
-    idx_list = [] 
-    idx_list.append(select_set.loc[question_no - 1].idx1)
-    idx_list.append(select_set.loc[question_no - 1].idx2)
-    idx_list.append(select_set.loc[question_no - 1].idx3)
-    idx_list.append(select_set.loc[question_no - 1].idx4)
+    question_idx = (set_idx-1) * 400 + (question_no-1) 
+    # print(f'해당 질문지 내용: {bws_set_df.loc[question_idx]}')
+    idx_list = list(map(int, select_set.iloc[question_no - 1, 3:7]))
+    print(idx_list)
     txt_list = bws_df.loc[idx_list].text_kor.values.tolist()
+    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+    weak_idx = 9999
+    strong_idx = 9999
+    if checked == 1: 
+        weak_idx = idx_list.index(checked_idx)
+        # print(f'체크된 Weakest idx: {weak_idx}')
+    if checked2 == 1:
+        strong_idx = idx_list.index(checked_idx2)
+        # print(f'체크된 Strongest idx: {strong_idx}')
     if question_no == 1:
         if request.method == 'POST':
             try:
-                weak_idx = request.form['radioOpt1']
-                print(f'weakest: {weak_idx}, {idx_list[int(weak_idx)]}')
-                bwsdb.save_db(idx_list[int(weak_idx)], 0)
+                weak_idx2 = request.form['radioOpt1']
+                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
+                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0) 
+                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
             except:
-                strong_idx = request.form['radioOpt2']
-                print(f'strongest: {strong_idx}, {idx_list[int(strong_idx)]}')
-                bwsdb.save_db(idx_list[int(strong_idx)], 1)
-        return render_template('index_s.html', question_no=question_no, txt_list=txt_list)
+                strong_idx2 = request.form['radioOpt2']
+                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
+        return render_template('index_s.html', question_no=question_no, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
     elif question_no == 400:
         if request.method == 'POST':
             try:
-                weak_idx = request.form['radioOpt1']
-                print(f'weakest: {weak_idx}, {idx_list[int(weak_idx)]}')
-                bwsdb.save_db(idx_list[int(weak_idx)], 0)
+                weak_idx2 = request.form['radioOpt1']
+                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
+                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
             except:
-                strong_idx = request.form['radioOpt2']
-                print(f'strongest: {strong_idx}', {idx_list[int(strong_idx)]})
-                bwsdb.save_db(idx_list[int(strong_idx)], 1)
-        return render_template('index_e.html', question_no=question_no, txt_list=txt_list)
+                strong_idx2 = request.form['radioOpt2']
+                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
+        return render_template('index_e.html', question_no=question_no, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
     else: 
         if request.method == 'POST':
             try:
-                weak_idx = request.form['radioOpt1']
-                print(f'weakest: {weak_idx}, {idx_list[int(weak_idx)]}')
-                bwsdb.save_db(0, ws_idx=idx_list[int(weak_idx)])
+                weak_idx2 = request.form['radioOpt1']
+                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
+                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
             except:
-                strong_idx = request.form['radioOpt2']
-                print(f'strongest: {strong_idx}, {idx_list[int(strong_idx)]}')
-                bwsdb.save_db(1, ws_idx=idx_list[int(strong_idx)])
-        return render_template('index.html', question_no=question_no, txt_list=txt_list)
+                strong_idx2 = request.form['radioOpt2']
+                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                if checked == 1: 
+                    weak_idx = idx_list.index(checked_idx)
+                if checked2 == 1:
+                    strong_idx = idx_list.index(checked_idx2)
+        return render_template('index.html', question_no=question_no, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():
-    global select_set
     global bwsdb
     if request.method == 'POST':
         global set_idx 
-        idx = request.form['form_test']
+        idx = request.form['form_test']   # 1~8 
         set_idx = int(idx)
 
     with open(os.path.join(cli_argse.config_path, cli_argse.db_config)) as f:
@@ -75,12 +111,13 @@ def main_page():
     bwsdb.table_to_csv(bwsdb.bws_set, 1)
     return render_template('main.html')
 
-def main(cli_argse):
+def main():
     app.run()
 
 if __name__ == '__main__':
+    global cli_argse 
     cli_parser = argparse.ArgumentParser()
     cli_parser.add_argument("--config_path", type=str, default='config')
     cli_parser.add_argument("--db_config", type=str, default='db_config.json')
     cli_argse = cli_parser.parse_args()
-    main(cli_argse)
+    main()

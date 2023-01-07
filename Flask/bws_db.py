@@ -38,26 +38,32 @@ class BWSDB():
             columns=['idx', 'Question_no', 'Set_no', 'idx1', 'idx2', 'idx3', 'idx4']
             self.bws_set_df = pd.DataFrame(tb, columns=columns)
 
-    def save_log(self):
+    def save_log(self, ws_idx=None, q_idx=None, label_type=None):
         '''
         label_type = 0  -> weakest 
         label_type = 1  -> strongest 
         ''' 
+        if label_type == 0:
+            sql = f'UPDATE bws_log_test SET Weak_checked = 1, Weakest = {ws_idx} WHERE idx={q_idx};'
+        elif label_type == 1:
+            sql = f'UPDATE bws_log_test SET Strong_checked = 1, Strongest = {ws_idx} WHERE idx={q_idx};'
+        self.execute_sql(sql)
+        self.conn.commit()
 
-    def save_db(self, label_type, ws_idx=None, idx_list=None):
+    def is_checked(self, q_idx):
+        sql = f'SELECT Weak_checked, Strong_checked, Weakest, Strongest FROM bws_log_test WHERE idx = {q_idx};'
+        result = self.execute_sql(sql)
+        checked, checked2, checked_idx, checked_idx2 = result[0][0], result[0][1], result[0][2], result[0][3]
+        return checked, checked2, checked_idx, checked_idx2
+    
+    def save_db(self, ws_idx=None, label_type=None):
         '''
         label_type = 0  -> weakest 
         label_type = 1  -> strongest 
         '''
-        if idx_list != None:
-            for idx in idx_list:
-                sql = f'UPDATE bws_test SET cnt = cnt + 1 WHERE idx={idx};'
-
         if label_type == 0:
-            sql = f'UPDATE bws_test SET weakest_cnt = weakest_cnt + 1 WHERE idx={idx};'
+            sql = f'UPDATE bws_test SET weakest_cnt = weakest_cnt + 1 WHERE idx={ws_idx};'
         elif label_type == 1:
-            sql = f'UPDATE bws_test SET strongest_cnt = strongest_cnt + 1 WHERE idx={idx};'
+            sql = f'UPDATE bws_test SET strongest_cnt = strongest_cnt + 1 WHERE idx={ws_idx};'
         self.execute_sql(sql)
         self.conn.commit()
-        sql = f'SELECT * FROM bws_test WHERE idx={idx}'
-        print(self.execute_sql(sql))
