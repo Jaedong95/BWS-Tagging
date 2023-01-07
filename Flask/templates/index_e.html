@@ -23,124 +23,25 @@
         </div>       
         <div class="row justify-content-md-center">
             <div class="col col-md-auto mt-5">
-                <p class="text-break fs-6">1. {{txt_list[0]}}</p>
+                <p class="text-break fs-6">1. (Q{{idx_list[0]}}) {{txt_list[0]}}</p>
             </div>
         </div>
         <div class="row justify-content-md-center">
             <div class="col col-md-auto mt-3">
-                <p class="text-break fs-6">2. {{txt_list[1]}}</p>
+                <p class="text-break fs-6">2. (Q{{idx_list[1]}}) {{txt_list[1]}}</p>
             </div>
         </div>
         <div class="row justify-content-md-center">
             <div class="col col-md-auto mt-3">
-                <p class="text-break fs-6">3. {{txt_list[2]}}</p>
+                <p class="text-break fs-6">3. (Q{{idx_list[2]}}) {{txt_list[2]}}</p>
             </div>
         </div>
         <div class="row justify-content-md-center">
             <div class="col col-md-auto mt-3">
-                <p class="text-break fs-6">4. {{txt_list[3]}}</p>
+                <p class="text-break fs-6">4. (Q{{idx_list[3]}}) {{txt_list[3]}}</p>
             </div>
         </div>
         <div class="col mt-5">
-            <p class="fs-6 fw-bold">Weakest</p>
-        </div>
-        <form method="post">
-            <div class="row justify-content-md-center">
-                {% if weak_idx == 0 %}
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0 style="background-color:dimgrey;" disabled>
-                    <label class="form-check-label" for="radio1">1</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
-                    <label class="form-check-label" for="radio2">2</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
-                    <label class="form-check-label" for="radio3">3</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
-                    <label class="form-check-label" for="radio4">4</label>
-                </div>
-                {% elif weak_idx == 1 %}
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
-                    <label class="form-check-label" for="radio1">1</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1 style="background-color:dimgrey;" disabled>
-                    <label class="form-check-label" for="radio2">2</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
-                    <label class="form-check-label" for="radio3">3</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
-                    <label class="form-check-label" for="radio4">4</label>
-                </div>
-                {% elif weak_idx == 2 %}
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
-                    <label class="form-check-label" for="radio1">1</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
-                    <label class="form-check-label" for="radio2">2</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2 style="background-color:dimgrey;" disabled>
-                    <label class="form-check-label" for="radio3">3</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
-                    <label class="form-check-label" for="radio4">4</label>
-                </div>
-                {% elif weak_idx == 3 %}
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
-                    <label class="form-check-label" for="radio1">1</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
-                    <label class="form-check-label" for="radio2">2</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
-                    <label class="form-check-label" for="radio3">3</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3 style="background-color:dimgrey;" disabled>
-                    <label class="form-check-label" for="radio4">4</label>
-                </div>
-                {% elif weak_idx == 9999 %}
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
-                    <label class="form-check-label" for="radio1">1</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
-                    <label class="form-check-label" for="radio2">2</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
-                    <label class="form-check-label" for="radio3">3</label>
-                </div>
-                <div class="col col-md-auto form-check form-check-inline m-1">
-                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
-                    <label class="form-check-label" for="radio4">4</label>
-                </div>    
-                {% endif %}           
-                {% if checked==1 %}
-                <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right; background-color:gray;" disabled>Save</button>
-                {% elif checked==0 %}
-                <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Save</button>
-                {% endif %}
-                <!--button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Update</button-->
-            </div>
-        </form>
-        <div class="col mt-4">
             <p class="fs-6 fw-bold">Strongest</p>
         </div>
         <form method="post">
@@ -237,6 +138,105 @@
                     <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1">Save</button>
                 {% endif %}
                 <!--button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1">Update<button-->
+            </div>
+        </form>
+        <div class="col mt-4">
+            <p class="fs-6 fw-bold">Weakest</p>
+        </div>
+        <form method="post">
+            <div class="row justify-content-md-center">
+                {% if weak_idx == 0 %}
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0 style="background-color:dimgrey;" disabled>
+                    <label class="form-check-label" for="radio1">1</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
+                    <label class="form-check-label" for="radio2">2</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
+                    <label class="form-check-label" for="radio3">3</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
+                    <label class="form-check-label" for="radio4">4</label>
+                </div>
+                {% elif weak_idx == 1 %}
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
+                    <label class="form-check-label" for="radio1">1</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1 style="background-color:dimgrey;" disabled>
+                    <label class="form-check-label" for="radio2">2</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
+                    <label class="form-check-label" for="radio3">3</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
+                    <label class="form-check-label" for="radio4">4</label>
+                </div>
+                {% elif weak_idx == 2 %}
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
+                    <label class="form-check-label" for="radio1">1</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
+                    <label class="form-check-label" for="radio2">2</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2 style="background-color:dimgrey;" disabled>
+                    <label class="form-check-label" for="radio3">3</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
+                    <label class="form-check-label" for="radio4">4</label>
+                </div>
+                {% elif weak_idx == 3 %}
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
+                    <label class="form-check-label" for="radio1">1</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
+                    <label class="form-check-label" for="radio2">2</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
+                    <label class="form-check-label" for="radio3">3</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3 style="background-color:dimgrey;" disabled>
+                    <label class="form-check-label" for="radio4">4</label>
+                </div>
+                {% elif weak_idx == 9999 %}
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio1" value=0>
+                    <label class="form-check-label" for="radio1">1</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio2" value=1>
+                    <label class="form-check-label" for="radio2">2</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio3" value=2>
+                    <label class="form-check-label" for="radio3">3</label>
+                </div>
+                <div class="col col-md-auto form-check form-check-inline m-1">
+                    <input class="form-check-input" type="radio" name="radioOpt1" id="radio4" value=3>
+                    <label class="form-check-label" for="radio4">4</label>
+                </div>    
+                {% endif %}           
+                {% if checked==1 %}
+                <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right; background-color:gray;" disabled>Save</button>
+                {% elif checked==0 %}
+                <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Save</button>
+                {% endif %}
+                <!--button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Update</button-->
             </div>
         </form>
         <div class="row justify-content-md-center mt-5">
