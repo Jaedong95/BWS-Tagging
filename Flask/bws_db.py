@@ -56,6 +56,21 @@ class BWSDB():
         checked, checked2, checked_idx, checked_idx2 = result[0][0], result[0][1], result[0][2], result[0][3]
         return checked, checked2, checked_idx, checked_idx2
     
+    def update_log(self, q_idx=None):
+        sql = f'UPDATE bws_log_test SET Weak_checked = 0, Strong_checked = 0, Weakest = 9999, Strongest = 9999 WHERE idx={q_idx};'
+        self.execute_sql(sql)
+        self.conn.commit()
+
+    def update_db(self, strong_idx=None, weak_idx=None):
+        '''
+        해당 질문지에 체크된 값을 해제함 
+        '''
+        sql = f'UPDATE bws_test SET weakest_cnt = weakest_cnt - 1 WHERE idx={weak_idx}'
+        sql2 = f'UPDATE bws_test SET strongest_cnt = strongest_cnt - 1 WHERE idx={strong_idx}'
+        self.execute_sql(sql)
+        self.execute_sql(sql2)
+        self.conn.commit()
+    
     def save_db(self, ws_idx=None, label_type=None):
         '''
         label_type = 0  -> weakest 

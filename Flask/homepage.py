@@ -13,15 +13,16 @@ app = Flask(__name__)
 def index(question_no):
     bws_df = bwsdb.bws_df
     bws_set_df = bwsdb.bws_set_df
-    print(f'{set_idx}번 BWS Set 작업 중..')
+    # print(f'{set_idx}번 BWS Set 작업 중..')
     select_set = bws_set_df[bws_set_df.Set_no==set_idx]
     select_set.reset_index(inplace=True, drop=True)
-    question_idx = (set_idx-1) * 400 + (question_no-1) 
+    question_idx = (set_idx-1) * 400 + (question_no-1)    # 1~3200
     # print(f'해당 질문지 내용: {bws_set_df.loc[question_idx]}')
     idx_list = list(map(int, select_set.iloc[question_no - 1, 3:7]))
     # print(idx_list)
     txt_list = bws_df.loc[idx_list].text_kor.values.tolist()
     checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+    # print(f'test: {checked}, {checked2}')
     weak_idx = 9999
     strong_idx = 9999
     if checked == 1: 
@@ -31,67 +32,90 @@ def index(question_no):
     if question_no == 1:
         if request.method == 'POST':
             try:
-                weak_idx2 = request.form['radioOpt1']
-                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
-                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0) 
+                request.form['update']
+                bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
+                bwsdb.update_log(q_idx=question_idx)
                 checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                weak_idx = checked_idx 
+                strong_idx = checked_idx2
             except:
-                strong_idx2 = request.form['radioOpt2']
-                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                try:
+                    weak_idx2 = request.form['radioOpt1']
+                    bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)   # 질문 번호 (1~1600)
+                    bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0) 
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
+                except:
+                    strong_idx2 = request.form['radioOpt2']
+                    bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                    bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
         return render_template('index_s.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
     elif question_no == 400:
         if request.method == 'POST':
             try:
-                weak_idx2 = request.form['radioOpt1']
-                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
-                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                request.form['update']
+                bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
+                bwsdb.update_log(q_idx=question_idx)
                 checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                weak_idx = checked_idx 
+                strong_idx = checked_idx2
             except:
-                strong_idx2 = request.form['radioOpt2']
-                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                try:
+                    weak_idx2 = request.form['radioOpt1']
+                    bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
+                    bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
+                except:
+                    strong_idx2 = request.form['radioOpt2']
+                    bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                    bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)               
         return render_template('index_e.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
     else: 
         if request.method == 'POST':
             try:
-                weak_idx2 = request.form['radioOpt1']
-                bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
-                bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                request.form['update']
+                bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
+                bwsdb.update_log(q_idx=question_idx)
                 checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                weak_idx = checked_idx 
+                strong_idx = checked_idx2
             except:
-                strong_idx2 = request.form['radioOpt2']
-                bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                if checked == 1: 
-                    weak_idx = idx_list.index(checked_idx)
-                if checked2 == 1:
-                    strong_idx = idx_list.index(checked_idx2)
+                try:
+                    weak_idx2 = request.form['radioOpt1']
+                    bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
+                    bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
+                except:
+                    strong_idx2 = request.form['radioOpt2']
+                    bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                    bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
         return render_template('index.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def main_page():

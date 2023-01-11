@@ -230,10 +230,15 @@
                 {% elif checked==0 %}
                 <button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Save</button>
                 {% endif %}
-                <!--button type="submit" class="col col-md-auto btn btn-outline-dark btn-sm m-1" style="float:right">Update</button-->
             </div>
         </form>
-        <div class="row justify-content-md-center mt-5">
+        <form method="post">
+            <div class="col col-md-auto form-check mt-1">
+                <button type="submit" class="col btn btn-outline-dark btn-sm m-1" style="float:right;">Update</button>
+                <input class="form-check-input m-2 mt-3" type="radio" name="update" id="update" value="1" style="float:right; background-color:whitesmoke;" aria-label="...">
+            </div>
+        </form>
+        <div class="row justify-content-md-center mt-4">
             <div class="col text-lg-start mt-3">
                 <p class="text-break fs-6 fst-italic">{{question_no}}/400 Set</p>
             </div>
