@@ -233,12 +233,22 @@
                 {% endif %}
             </div>
         </form>
-        <form method="post">
-            <div class="col col-md-auto form-check mt-1">
-                <button type="submit" class="col btn btn-outline-dark btn-sm m-1" style="float:right;">Update</button>
-                <input class="form-check-input m-2 mt-3" type="radio" name="update" id="update" value="" style="float:right; background-color:whitesmoke;" aria-label="...">
+        <div class="row justify-content-md-center mt-4">
+            <div class="col text-lg-end text-center mt-3">
+                <form method="post">
+                    <!--div class="col col-md-auto form-check"-->
+                        <button type="submit" class="col btn btn-outline-dark btn-sm m-1" style="float:right;">Translate</button>
+                        <input class="form-check-input m-2 mt-3" type="radio" name="translate" id="translate" value="0" style="float:right; background-color: whitesmoke;" aria-label="...">            
+                    <!--/div-->
+                </form>
+                <form method="post">
+                    <!--div class="col col-md-auto form-check"-->
+                        <button type="submit" class="col btn btn-outline-dark btn-sm m-1" style="float:right;">Update</button>
+                        <input class="form-check-input m-2 mt-3" type="radio" name="update" id="update" value="1" style="float:right; background-color:whitesmoke;" aria-label="...">
+                    <!--/div-->
+                </form>            
             </div>
-        </form>
+        </div>
         <div class="row justify-content-md-center mt-4">
             <div class="col text-lg-start mt-3">
                 <p class="text-break fs-6 fst-italic">{{question_no}}/400 Set</p>
