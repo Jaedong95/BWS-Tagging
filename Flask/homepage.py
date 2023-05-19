@@ -7,126 +7,72 @@ from attrdict import AttrDict
 from flask import Flask, render_template, request
 
 app = Flask(__name__)
+
 @app.route('/index/<int:question_no>', methods=['GET', 'POST'])
 def index(question_no):
-    bws_df = bwsdb.bws_df
-    bws_set_df = bwsdb.bws_set_df
-    bwsdb.get_set_idx()
+    '''
+    question_no: 1 ~ 400 (총 400문항의 질문지, 각 질문지는 4개 문항으로 구성돼 있음)
+    '''
+    bws_df = bwsdb.bws_df   # bws_df에는 1,600개 문장에 대한 정보가 들어있음 
+    bws_set_df = bwsdb.bws_set_df   # bws_set_df에는 1~8번 BWS Set에 대한 정보가 들어있음 
+    bwsdb.get_set_idx()   # 1~8 번 중 몇 번 BWS Set 작업 중인지 업데이트   
     # print(f'{set_idx}번 BWS Set 작업 중..')
-    select_set = bws_set_df[bws_set_df.Set_no==bwsdb.set_idx]
-    select_set.reset_index(inplace=True, drop=True)
+    select_set = bws_set_df[bws_set_df.Set_no==bwsdb.set_idx]    # 사용자가 선택한 BWS Set 데이터만 불러옴  
+    select_set.reset_index(inplace=True, drop=True)    
     question_idx = (bwsdb.set_idx-1) * 400 + (question_no-1)    # 1~3200
     # print(f'해당 질문지 내용: {bws_set_df.loc[question_idx]}')
-    idx_list = list(map(int, select_set.iloc[question_no - 1, 3:7]))
+    idx_list = list(map(int, select_set.iloc[question_no - 1, 3:7]))   # 4가지 질문 인덱스 불러옴 
     # print(idx_list)
-    txt_list = bws_df.loc[idx_list].text_kor.values.tolist()
-    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+    txt_list = bws_df.loc[idx_list].text_kor.values.tolist()    # 영어: text, 한글: text_kor
+    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)   # 작업한 질문지인지 확인  
     # print(f'test: {checked}, {checked2}')
-    weak_idx = 9999
+    weak_idx = 9999    
     strong_idx = 9999
-    if checked == 1: 
-        weak_idx = idx_list.index(checked_idx)
-    if checked2 == 1:
+    if checked == 1:   # Weakest 문항이 이미 주석되어 있는 경우 
+        weak_idx = idx_list.index(checked_idx)    
+    if checked2 == 1:   # Strongest 문항이 이미 주석되어 있는 경우 
         strong_idx = idx_list.index(checked_idx2)
-    if question_no == 1:
+    
+    '''
+    Tagging 작업 
+    '''
+    if request.method == 'POST':
+        try:
+            request.form['translate']    # 텍스트 번역 작업 (한글 -> 영어)  
+            txt_list = bws_df.loc[idx_list].text.values.tolist()    # 영어 질문지 반환  
+        except:
+            try:
+                request.form['update']   # 주석 작업 잘못한 경우 초기화 (Strongest, Weakest 모두 체크된 상태에서 동작) 
+                bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
+                bwsdb.update_log(q_idx=question_idx)   
+                checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                weak_idx = checked_idx 
+                strong_idx = checked_idx2
+            except:
+                try:
+                    weak_idx2 = request.form['radioOpt1']    # Weakest 문항 정보 저장 
+                    bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)   
+                    bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0) 
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
+                except:
+                    strong_idx2 = request.form['radioOpt2']    # Strongest 문항 정보 저장 
+                    bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
+                    bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
+                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
+                    if checked == 1: 
+                        weak_idx = idx_list.index(checked_idx)
+                    if checked2 == 1:
+                        strong_idx = idx_list.index(checked_idx2)
+    if question_no == 1:    # 1번 (첫번째) 질문지 작업 
         print(f'{bwsdb.set_idx}번 BWS Set 작업 중..')
-        if request.method == 'POST':
-            try:
-                request.form['translate']
-                txt_list = bws_df.loc[idx_list].text.values.tolist()
-            except:
-                try:
-                    request.form['update']
-                    bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
-                    bwsdb.update_log(q_idx=question_idx)
-                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                    weak_idx = checked_idx 
-                    strong_idx = checked_idx2
-                except:
-                    try:
-                        weak_idx2 = request.form['radioOpt1']
-                        bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)   # 질문 번호 (1~1600)
-                        bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0) 
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)
-                    except:
-                        strong_idx2 = request.form['radioOpt2']
-                        bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                        bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)
         return render_template('index_s.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
-    elif question_no == 400:
-        if request.method == 'POST':
-            try:
-                request.form['translate']
-                txt_list = bws_df.loc[idx_list].text.values.tolist()
-            except:
-                try:
-                    request.form['update']
-                    bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
-                    bwsdb.update_log(q_idx=question_idx)
-                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                    weak_idx = checked_idx 
-                    strong_idx = checked_idx2
-                except:
-                    try:
-                        weak_idx2 = request.form['radioOpt1']
-                        bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
-                        bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)
-                    except:
-                        strong_idx2 = request.form['radioOpt2']
-                        bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                        bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)               
+    elif question_no == 400:    # 400번 (마지막) 질문지 작업
         return render_template('index_e.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
-    else: 
-        if request.method == 'POST':
-            try:
-                request.form['translate']
-                txt_list = bws_df.loc[idx_list].text.values.tolist()
-            except:
-                try:
-                    request.form['update']
-                    bwsdb.update_db(strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
-                    bwsdb.update_log(q_idx=question_idx)
-                    checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                    weak_idx = checked_idx 
-                    strong_idx = checked_idx2
-                except:
-                    try:
-                        weak_idx2 = request.form['radioOpt1']
-                        bwsdb.save_db(ws_idx=idx_list[int(weak_idx2)], label_type=0)
-                        bwsdb.save_log(ws_idx=idx_list[int(weak_idx2)], q_idx= question_idx, label_type=0)
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)
-                    except:
-                        strong_idx2 = request.form['radioOpt2']
-                        bwsdb.save_db(ws_idx=idx_list[int(strong_idx2)], label_type=1)
-                        bwsdb.save_log(ws_idx=idx_list[int(strong_idx2)], q_idx=question_idx, label_type=1)
-                        checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(q_idx=question_idx)
-                        if checked == 1: 
-                            weak_idx = idx_list.index(checked_idx)
-                        if checked2 == 1:
-                            strong_idx = idx_list.index(checked_idx2)
+    else:    # 2 ~ 399 질문지 작업 
         return render_template('index.html', question_no=question_no, idx_list=idx_list, txt_list=txt_list, checked=checked, checked2=checked2, weak_idx=weak_idx, strong_idx=strong_idx)
 
 @app.route('/', methods=['GET', 'POST'])
@@ -141,28 +87,28 @@ def main_page():
     with open(os.path.join(cli_argse.config_path, cli_argse.db_config)) as f:
         args = AttrDict(json.load(f))
     bwsdb = BWSDB(args)
-    bwsdb.connect()
-    bwsdb.get_bws()
+    bwsdb.connect()    # MySQL 연동 
+    bwsdb.get_bws()   
     bwsdb.get_bws_set()
     bwsdb.get_set_idx()
-    bwsdb.table_to_csv(bwsdb.bws, 0)
-    bwsdb.table_to_csv(bwsdb.bws_set, 1)
+    bwsdb.table_to_csv(bwsdb.bws, 0)    # bws table -> bws dataframe 
+    bwsdb.table_to_csv(bwsdb.bws_set, 1)    # bws set table -> bws set dataframe 
     
     if request.method == 'POST':
         try:
-            idx = request.form['form_test']   # 1~8 
-            set_idx = int(idx)
-            bwsdb.save_set_idx(set_idx)
+            idx = request.form['form_test']   # 1~8번 중 어떤 BWS Set 선택했는지 정보 조회 
+            set_idx = int(idx)    # BWS Set 설정 
+            bwsdb.save_set_idx(set_idx)    
         except:
             try:
-                request.form['check_annot']
+                request.form['check_annot']   # 주석 작업되지 않은 질문지 인덱스 정보 조회 
                 annot_check = 0
-                bwsdb.get_bws_set_log()
-                bwsdb.table_to_csv(bwsdb.bws_set_log, 2)
+                bwsdb.get_bws_set_log()    # 주석 작업 기록 로드 
+                bwsdb.table_to_csv(bwsdb.bws_set_log, 2)   # bws set log table -> bws set log db 
                 bws_set_log_df = bwsdb.bws_set_log_df
-                select_set = bws_set_log_df[bws_set_log_df.Set_no==bwsdb.set_idx]
+                select_set = bws_set_log_df[bws_set_log_df.Set_no==bwsdb.set_idx]   
                 select_set.reset_index(inplace=True, drop=True)
-                set_a = select_set[select_set.Weak_checked==0].index.tolist()
+                set_a = select_set[select_set.Weak_checked==0].index.tolist()   
                 set_b = select_set[select_set.Strong_checked==0].index.tolist()
                 not_tagged = list(set(set_a + set_b)) 
                 # print(not_tagged)    
@@ -171,8 +117,8 @@ def main_page():
     return render_template('main.html', annot_check=annot_check, set_idx=bwsdb.set_idx, not_tagged=not_tagged)
 
 def main():
-    # app.run(debug=True, port=9509)
-    app.run(host="192.168.123.110", debug=True, port=9509)
+    app.run(debug=True, port=9509)
+    # app.run(host="192.168.123.110", debug=True, port=9509)
     
 if __name__ == '__main__':
     global cli_argse 
