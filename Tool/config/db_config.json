@@ -1,4 +1,4 @@
-{"host": "localhost", "user": "cori_test", "password": "cori", "db": "tagging"}
+{"host": "localhost", "user": "설정한 사용자 이름", "password": "설정한 비밀번호", "db": "생성한 Schema 이름"}
 
 
 
