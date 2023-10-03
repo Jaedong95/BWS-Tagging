@@ -122,7 +122,7 @@ def main_page():
 
 def main():
     # app.run(debug=True, port=9509)
-    app.run(host="192.168.123.112", debug=True, port=9509)
+    app.run(host="IPv4 주소 입력", debug=True, port=9509)
     
 if __name__ == '__main__':
     global cli_argse 
