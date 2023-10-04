@@ -24,11 +24,12 @@ def index(question_no):
     
     # print(f'해당 질문지 내용: {bws_set_df.loc[question_idx]}')
     idx_list = list(map(int, select_set.iloc[question_no - 1, 3:7]))   # 4가지 질문 인덱스 불러옴 
-    # print(idx_list)
+    print(f'idx_list: {idx_list}')
     txt_list = bws_df.loc[idx_list].text_kor.values.tolist()    # 해당 페이지에서 기본적으로 보여지는 텍스트 언어 설정 (영어: text, 한글: text_kor)
     # print(question_idx)
     checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(cli_argse.criteria, q_idx=question_idx)   # 주석 작업 완료된 질문지인지 확인  
-    # print(f'test: {checked}, {checked2}')
+    print(f'test: {checked}, {checked2}')
+    print(f'test2: {checked_idx},{checked_idx2}')
     weak_idx = 9999    
     strong_idx = 9999
     if checked == 1:   # Weakest 문항이 이미 주석되어 있는 경우 
@@ -48,8 +49,8 @@ def index(question_no):
                 request.form['update']   # 주석 작업 잘못한 경우 초기화 (Strongest, Weakest 모두 체크되어 있는 상태에서만 동작) 
                 bwsdb.update_db(cli_argse.criteria, strong_idx=idx_list[int(strong_idx)], weak_idx=idx_list[int(weak_idx)])
                 bwsdb.update_log(cli_argse.criteria, q_idx=question_idx)   
-                print(question_idx)
                 checked, checked2, checked_idx, checked_idx2 = bwsdb.is_checked(cli_argse.criteria, q_idx=question_idx)
+                print(checked_idx, checked_idx2)
                 weak_idx = checked_idx 
                 strong_idx = checked_idx2
             except:
@@ -122,7 +123,7 @@ def main_page():
 
 def main():
     # app.run(debug=True, port=9509)
-    app.run(host="IPv4 주소 입력", debug=True, port=9509)
+    app.run(host="192.168.123.101", debug=True, port=9509)
     
 if __name__ == '__main__':
     global cli_argse 

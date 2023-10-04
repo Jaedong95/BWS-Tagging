@@ -87,7 +87,6 @@ class MySQLDB():
             if idx == 0: 
                 continue 
             try:    # ' -> 제거하지 않으면 오류 발생 
-                print(line[0], line[1])
                 sql = f"INSERT INTO bws_a{criteria} VALUES('{{0}}', '{{1}}', '{{2}}', '{{3}}', '{{4}}', '{{5}}')"\
                 .format(line[0], line[1].replace("'", ''), line[2].replace("'",''), line[3], line[4], line[5])
                 self.curs.execute(sql)
@@ -104,7 +103,7 @@ class MySQLDB():
                 continue 
             
             try:  
-                sql = f"INSERT INTO bws_a{criteria}_set VALUES('{{0}}', '{{1}}', '{{2}}', '{{3}}', '{{4}}', '{{5}}', '{6}')"\
+                sql = f"INSERT INTO bws_a{criteria}_set VALUES('{{0}}', '{{1}}', '{{2}}', '{{3}}', '{{4}}', '{{5}}', '{{6}}')"\
                 .format(line[0], line[1], line[2], line[3], line[4], line[5], line[6])
                 self.curs.execute(sql)
             except:
@@ -120,7 +119,7 @@ class MySQLDB():
                 continue 
             
             try:  
-                sql = f"INSERT INTO bws_a{criteria}_set_log VALUES('{{0}}', '{{1}}', '{{2}}', '{{3}}', '{{4}}', '{{5}}', '{6}')"\
+                sql = f"INSERT INTO bws_a{criteria}_set_log VALUES('{{0}}', '{{1}}', '{{2}}', '{{3}}', '{{4}}', '{{5}}', '{{6}}')"\
                 .format(line[0], line[1], line[2], line[3], line[4], line[5], line[6])
                 self.curs.execute(sql)
             except:

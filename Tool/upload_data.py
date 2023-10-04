@@ -20,9 +20,10 @@ def main():
     mysqldb.connect()
 
     ''' upload 대상 파일명 설정 '''
-    upload_criteria = f'data/bws_a{cli_argse.criteria}_db.csv'
-    upload_set = f'data/bws_a{cli_argse.criteria}_set.csv'
-    upload_log = f'data/bws_a{cli_argse.criteria}_set_log.csv'
+    upload_criteria = f'data/bws_a{cli_argse.criteria}_table_tagged.csv'
+    # upload_criteria = f'data/bws_a{cli_argse.criteria}_db.csv'
+    upload_set = f'data/bws_a{cli_argse.criteria}_set_tagged.csv'
+    upload_log = f'data/bws_a{cli_argse.criteria}_set_log_tagged.csv'
 
     mysqldb.upload_criteria(cli_argse.criteria, upload_criteria)
     mysqldb.upload_set(cli_argse.criteria, upload_set)
