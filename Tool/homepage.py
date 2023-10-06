@@ -108,7 +108,7 @@ def main_page():
             try:
                 request.form['check_annot']   # 주석 작업되지 않은 질문지 인덱스 정보 조회 
                 annot_check = 0
-                bwsdb.get_bws_set_log()    # 주석 작업 기록 로드 
+                bwsdb.get_bws_set_log(cli_argse.criteria)    # 주석 작업 기록 로드 
                 bwsdb.table_to_csv(bwsdb.bws_set_log, 2)   # bws set log table -> bws set log db 
                 bws_set_log_df = bwsdb.bws_set_log_df
                 select_set = bws_set_log_df[bws_set_log_df.Set_no==bwsdb.set_idx]   
